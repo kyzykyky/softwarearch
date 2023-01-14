@@ -1,0 +1,13 @@
+level: "debug"
+encoding: "json"
+outputPaths: ["log/service.log", "stdout"]
+errorOutputPaths: ["log/service_err.log", "stderr"]
+encoderConfig:
+  nameKey: "logger"
+  levelKey: "L"
+  levelEncoder: "capital"
+  timeKey: "T"
+  timeEncoder: "iso8601"
+  functionKey: "FN"
+  stacktraceKey: "ST"
+  messageKey: "MSG"
