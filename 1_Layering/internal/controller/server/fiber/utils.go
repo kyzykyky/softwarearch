@@ -12,7 +12,7 @@ import (
 )
 
 func RecoverStackTraceHandler(c *fiber.Ctx, err interface{}) {
-	logger.Logger().Error("fiber server error",
+	logger.Logger().Error("fiber: server error",
 		zapcore.Field{Key: "error", Type: zapcore.ErrorType, Interface: err},
 		zapcore.Field{Key: "path", Type: zapcore.StringType, String: c.Path()})
 }
@@ -31,7 +31,7 @@ func GetLoggerConfig() fiberLogger.Config {
 	var err error
 	accessFile, err = os.OpenFile("log/access.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0764)
 	if err != nil {
-		logger.Logger().Error("error opening file for fiber logger",
+		logger.Logger().Error("fiber: error opening file for logger",
 			zapcore.Field{Key: "error", Type: zapcore.ErrorType, Interface: err})
 		conf.Output = os.Stderr
 		return conf

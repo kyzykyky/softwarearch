@@ -3,6 +3,8 @@ package fiber
 import (
 	"github.com/gofiber/fiber/v2"
 	dataErrors "github.com/kyzykyky/softwarearch/bookservice/internal/data/errors"
+	"github.com/kyzykyky/softwarearch/bookservice/internal/integration/logger"
+	"go.uber.org/zap/zapcore"
 )
 
 type errorMessage struct {
@@ -24,10 +26,10 @@ func ErrorHandler(c *fiber.Ctx, err error) error {
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(errorMessage{err.Error()})
 	case dataErrors.ErrInternal:
 		return c.Status(fiber.StatusInternalServerError).JSON(errorMessage{err.Error()})
-	case dataErrors.ErrUnknown:
-		return c.Status(fiber.StatusInternalServerError).JSON(errorMessage{err.Error()})
 
 	default:
+		logger.Logger().Error("fiber: Unhandled error",
+			zapcore.Field{Key: "error", Type: zapcore.ErrorType, Interface: err})
 		return c.Status(fiber.StatusInternalServerError).JSON(errorMessage{err.Error()})
 	}
 }

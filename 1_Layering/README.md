@@ -100,6 +100,18 @@ make run
 make build
 ```
 
+### Swagger documentation for API
+
+After launching the service, you can access the documentation at:
+
+```bash
+http://localhost:3000/docs/index.html
+```
+
+OR  
+Swagger json file is available at:  
+internal/controller/server/fiber/docs/swagger.json
+
 ### Dev requirements
 
 - Development reload tool: [reflex](https://github.com/cespare/reflex)

@@ -8,26 +8,28 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/kyzykyky/softwarearch/bookservice/internal/integration/logger"
 	"github.com/kyzykyky/softwarearch/bookservice/pkg/domain"
+	"go.uber.org/zap/zapcore"
 )
 
-// @Summary		Get Book
-// @Description	Get Book by ID.
-// @Tags			Book
-// @Accept			application/json
-// @Produce		json
-// @Param			id	query		int	true	"Book ID"
-// @Success		200	{object}	domain.Book
-// @Failure		400	{object}	fiber.errorMessage
-// @Router			/api/book [get]
+//	@Summary		Get Book
+//	@Description	Get Book by ID.
+//	@Tags			Book
+//	@Accept			application/json
+//	@Produce		json
+//	@Param			id	query		int	true	"Book ID"
+//	@Success		200	{object}	domain.Book
+//	@Failure		400	{object}	fiber.errorMessage
+//	@Router			/api/book [get]
 func (s *Server) GetBook(c *fiber.Ctx) error {
 	id := c.Query("id")
 	if id == "" {
-		logger.Logger().Warn("Book id is empty")
+		logger.Logger().Warn("fiber: Book id is empty",
+			zapcore.Field{Key: "method", Type: zapcore.StringType, String: "GetBook"})
 		return c.Status(422).JSON(errorMessage{"Book ID is required"})
 	}
 	intId, err := strconv.Atoi(id)
 	if err != nil {
-		logger.Logger().Warn("Book id is not a number")
+		logger.Logger().Warn("fiber: Book id is not a number")
 		return c.Status(422).JSON(errorMessage{"Book ID is not a number"})
 	}
 
@@ -41,18 +43,18 @@ func (s *Server) GetBook(c *fiber.Ctx) error {
 	return c.Status(200).JSON(book)
 }
 
-// @Summary		Get Books
-// @Description	Get Books with count and offset as optional params.
-// @Description	Count is the number of books to return.
-// @Description	Offset is the number of books to skip.
-// @Tags			Book
-// @Accept			application/json
-// @Produce		json
-// @Param			count	query		int	false	"Number of books to return"
-// @Param			offset	query		int	false	"Offset"
-// @Success		200		{object}	[]domain.Book
-// @Failure		400		{object}	fiber.errorMessage
-// @Router			/api/books [get]
+//	@Summary		Get Books
+//	@Description	Get Books with count and offset as optional params.
+//	@Description	Count is the number of books to return.
+//	@Description	Offset is the number of books to skip.
+//	@Tags			Book
+//	@Accept			application/json
+//	@Produce		json
+//	@Param			count	query		int	false	"Number of books to return"
+//	@Param			offset	query		int	false	"Offset"
+//	@Success		200		{object}	[]domain.Book
+//	@Failure		400		{object}	fiber.errorMessage
+//	@Router			/api/books [get]
 func (s *Server) GetBooks(c *fiber.Ctx) error {
 	var intCount, intOffset int
 	var err error
@@ -60,7 +62,8 @@ func (s *Server) GetBooks(c *fiber.Ctx) error {
 	if count != "" {
 		intCount, err = strconv.Atoi(count)
 		if err != nil {
-			logger.Logger().Warn("Count is not a number")
+			logger.Logger().Warn("fiber: Count is not a number",
+				zapcore.Field{Key: "method", Type: zapcore.StringType, String: "GetBooks"})
 			return c.Status(422).JSON(errorMessage{"Count is not a number"})
 		}
 	}
@@ -68,7 +71,8 @@ func (s *Server) GetBooks(c *fiber.Ctx) error {
 	if offset != "" {
 		intOffset, err = strconv.Atoi(offset)
 		if err != nil {
-			logger.Logger().Warn("Offset is not a number")
+			logger.Logger().Warn("fiber: Offset is not a number",
+				zapcore.Field{Key: "method", Type: zapcore.StringType, String: "GetBooks"})
 			return c.Status(422).JSON(errorMessage{"Offset is not a number"})
 		}
 	}
@@ -83,19 +87,20 @@ func (s *Server) GetBooks(c *fiber.Ctx) error {
 	return c.Status(200).JSON(books)
 }
 
-// @Summary		Create new book
-// @Description	Create new book.
-// @Tags			Book
-// @Accept			application/json
-// @Produce		json
-// @Param			book	body		domain.Book	true	"Book"
-// @Success		200		{object}	domain.Book
-// @Failure		400		{object}	fiber.errorMessage
-// @Router			/api/book [post]
+//	@Summary		Create new book
+//	@Description	Create new book.
+//	@Tags			Book
+//	@Accept			application/json
+//	@Produce		json
+//	@Param			book	body		domain.Book	true	"Book"
+//	@Success		200		{object}	domain.Book
+//	@Failure		400		{object}	fiber.errorMessage
+//	@Router			/api/book [post]
 func (s *Server) CreateBook(c *fiber.Ctx) error {
 	var book domain.Book
 	if err := c.BodyParser(&book); err != nil {
-		logger.Logger().Warn("Invalid book")
+		logger.Logger().Warn("fiber: Invalid book",
+			zapcore.Field{Key: "method", Type: zapcore.StringType, String: "CreateBook"})
 		return c.Status(422).JSON(errorMessage{"Invalid book"})
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
@@ -108,19 +113,20 @@ func (s *Server) CreateBook(c *fiber.Ctx) error {
 	return c.Status(201).JSON(book)
 }
 
-// @Summary		Update book
-// @Description	Update book with new values.
-// @Tags			Book
-// @Accept			application/json
-// @Produce		json
-// @Param			book	body		domain.Book	true	"Book"
-// @Success		200		{object}	domain.Book
-// @Failure		400		{object}	fiber.errorMessage
-// @Router			/api/book [patch]
+//	@Summary		Update book
+//	@Description	Update book with new values.
+//	@Tags			Book
+//	@Accept			application/json
+//	@Produce		json
+//	@Param			book	body		domain.Book	true	"Book"
+//	@Success		200		{object}	domain.Book
+//	@Failure		400		{object}	fiber.errorMessage
+//	@Router			/api/book [patch]
 func (s *Server) UpdateBook(c *fiber.Ctx) error {
 	var book domain.Book
 	if err := c.BodyParser(&book); err != nil {
-		logger.Logger().Warn("Invalid book")
+		logger.Logger().Warn("fiber: Invalid book",
+			zapcore.Field{Key: "method", Type: zapcore.StringType, String: "UpdateBook"})
 		return c.Status(422).JSON(errorMessage{"Invalid book"})
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
@@ -133,24 +139,26 @@ func (s *Server) UpdateBook(c *fiber.Ctx) error {
 	return c.Status(200).JSON(book)
 }
 
-// @Summary		Delete Book
-// @Description	Delete Book by ID.
-// @Tags			Book
-// @Accept			application/json
-// @Produce		json
-// @Param			id	query		int	true	"Book ID"
-// @Success		201	{object}	nil
-// @Failure		400	{object}	fiber.errorMessage
-// @Router			/api/book [delete]
+//	@Summary		Delete Book
+//	@Description	Delete Book by ID.
+//	@Tags			Book
+//	@Accept			application/json
+//	@Produce		json
+//	@Param			id	query		int	true	"Book ID"
+//	@Success		201	{object}	nil
+//	@Failure		400	{object}	fiber.errorMessage
+//	@Router			/api/book [delete]
 func (s *Server) DeleteBook(c *fiber.Ctx) error {
 	id := c.Query("id")
 	if id == "" {
-		logger.Logger().Warn("Book id is empty")
+		logger.Logger().Warn("fiber: Book id is empty",
+			zapcore.Field{Key: "method", Type: zapcore.StringType, String: "DeleteBook"})
 		return c.Status(422).JSON(errorMessage{"Book ID is required"})
 	}
 	intId, err := strconv.Atoi(id)
 	if err != nil {
-		logger.Logger().Warn("Book id is not a number")
+		logger.Logger().Warn("fiber: Book id is not a number",
+			zapcore.Field{Key: "method", Type: zapcore.StringType, String: "DeleteBook"})
 		return c.Status(422).JSON(errorMessage{"Book ID is not a number"})
 	}
 

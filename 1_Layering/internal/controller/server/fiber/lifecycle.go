@@ -8,20 +8,24 @@ import (
 )
 
 func (app *Server) StartupTasks() error {
-	logger.Logger().Info("Starting fiber Bookservice API")
+	logger.Logger().Info("fiber: Starting Bookservice API")
 	// Any startup tasks here
 	return nil
 }
 
 func (app *Server) ShutdownTasks(c chan os.Signal) {
 	<-c
-	logger.Logger().Info("Shutting down fiber Bookservice API")
+	logger.Logger().Info("fiber: Shutting down Bookservice API")
 
 	err := app.App.Shutdown()
 	if err != nil {
-		logger.Logger().Error("error shutting down fiber Bookservice API",
+		logger.Logger().Error("fiber: error shutting down Bookservice API",
 			zapcore.Field{Key: "error", Type: zapcore.ErrorType, Interface: err})
 	}
 
-	accessFile.Close()
+	err = accessFile.Close()
+	if err != nil {
+		logger.Logger().Error("fiber: error closing access log file",
+			zapcore.Field{Key: "error", Type: zapcore.ErrorType, Interface: err})
+	}
 }

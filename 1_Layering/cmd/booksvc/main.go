@@ -6,7 +6,9 @@ import (
 	gorm_bookrepository "github.com/kyzykyky/softwarearch/bookservice/internal/data/bookrepository/gorm"
 	"github.com/kyzykyky/softwarearch/bookservice/internal/data/config/gorm/sqlite"
 	"github.com/kyzykyky/softwarearch/bookservice/internal/integration/logger"
+	"github.com/kyzykyky/softwarearch/bookservice/internal/integration/mq/nats"
 	"github.com/kyzykyky/softwarearch/bookservice/internal/service"
+
 	"go.uber.org/zap/zapcore"
 )
 
@@ -23,10 +25,21 @@ func main() {
 		logger.Logger().Panic("Sqlite gorm BookDAO Initialization failed",
 			zapcore.Field{Key: "error", Type: zapcore.ErrorType, Interface: err})
 	}
+	MQ, err := nats.Connection{Host: "localhost:4222"}.NewMQ()
+	if err != nil {
+		logger.Logger().Panic("Nats connection failed",
+			zapcore.Field{Key: "error", Type: zapcore.ErrorType, Interface: err})
+	}
 
-	Service := service.NewService(service.Service{
+	Service, err := service.NewService(service.Service{
 		BookDAO: bookDAO,
+		MQ:      MQ,
 	})
+	if err != nil {
+		logger.Logger().Panic("Service start failed",
+			zapcore.Field{Key: "error", Type: zapcore.ErrorType, Interface: err})
+	}
+
 	fiberServer := fiber.NewServer(Service, fiber.Conf{
 		Host: "localhost:3000",
 	})

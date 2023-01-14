@@ -1,5 +1,5 @@
 build: swagdocs
-        go build -o build/booksvc cmd/booksvc/main.go
+	go build -o build/booksvc cmd/booksvc/main.go
 
 run:
 	go run cmd/booksvc/main.go
