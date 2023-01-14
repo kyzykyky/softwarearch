@@ -59,6 +59,8 @@ This project uses:
 │   │   └── mq
 │   │       ├── mq.go
 │   │       └── nats
+│   │           ├── book.go
+│   │           └── connection.go
 │   └── service
 │       ├── book.go
 │       └── service.go
@@ -99,6 +101,18 @@ make run
 ```bash
 make build
 ```
+
+### Swagger documentation for API
+
+After launching the service, you can access the documentation at:
+
+```bash
+http://localhost:3000/docs/index.html
+```
+
+OR  
+Swagger json file is available at:  
+internal/controller/server/fiber/docs/swagger.json
 
 ### Dev requirements
 

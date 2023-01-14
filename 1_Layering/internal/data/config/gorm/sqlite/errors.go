@@ -11,18 +11,18 @@ import (
 func ConvertError(err error) error {
 	switch err {
 	case nil:
-		logger.Logger().Error("convert error: nil error")
+		logger.Logger().Error("gorm.sqlite:convert error: nil error")
 		return nil
 
 	case gorm.ErrRecordNotFound:
-		logger.Logger().Error("convert error: not found", zapcore.Field{Key: "error", Type: zapcore.StringType, String: err.Error()})
+		logger.Logger().Error("gorm.sqlite:convert error: not found", zapcore.Field{Key: "error", Type: zapcore.StringType, String: err.Error()})
 		return errors.ErrNotFound
 	case gorm.ErrInvalidData:
-		logger.Logger().Error("convert error: invalid data", zapcore.Field{Key: "error", Type: zapcore.StringType, String: err.Error()})
+		logger.Logger().Error("gorm.sqlite:convert error: invalid data", zapcore.Field{Key: "error", Type: zapcore.StringType, String: err.Error()})
 		return errors.ErrInvalid
 
 	default:
-		logger.Logger().Error("convert error: unknown error", zapcore.Field{Key: "error", Type: zapcore.StringType, String: err.Error()})
+		logger.Logger().Error("gorm.sqlite:convert error: unknown error", zapcore.Field{Key: "error", Type: zapcore.ErrorType, Interface: err})
 		return errors.ErrUnknown
 	}
 }
