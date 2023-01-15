@@ -4,10 +4,10 @@
 
 This project uses:
 
-- Sqlite as a database
-- NATS as a MQ
-- Fiber as a web framework
-- Zap as a logger
+- [Sqlite](https://www.sqlite.org) as a database with [GORM](https://gorm.io) as an ORM
+- [NATS](https://nats.io) as a MQ
+- [Fiber](https://github.com/gofiber/fiber) as a web framework
+- [Zap](https://github.com/uber-go/zap) as a logger
 
 ### Project structure
 
