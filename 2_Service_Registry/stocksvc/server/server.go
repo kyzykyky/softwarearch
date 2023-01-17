@@ -17,8 +17,8 @@ type Server struct {
 
 func (s Server) Start() error {
 	server := fiberpreset.Server{
-		Service: "productsvc",
-		Title:   "Products",
+		Service: "stocksvc",
+		Title:   "Stock",
 		Host:    s.Host,
 		Port:    s.Port,
 	}
