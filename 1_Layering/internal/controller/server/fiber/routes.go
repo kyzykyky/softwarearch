@@ -1,9 +1,10 @@
 package fiber
 
 func (s *Server) SetupBookserviceRoutes() {
-	s.App.Get("/api/book", s.GetBook)
-	s.App.Get("/api/books", s.GetBooks)
-	s.App.Post("/api/book", s.CreateBook)
-	s.App.Patch("/api/book", s.UpdateBook)
-	s.App.Delete("/api/book", s.DeleteBook)
+	api := s.App.Group("/api")
+	api.Get("/books/:id", s.GetBook)
+	api.Get("/books", s.GetBooks)
+	api.Post("/books", s.CreateBook)
+	api.Patch("/books", s.UpdateBook)
+	api.Delete("/books", s.DeleteBook)
 }

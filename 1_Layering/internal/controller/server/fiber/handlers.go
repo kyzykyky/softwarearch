@@ -16,12 +16,12 @@ import (
 //	@Tags			Book
 //	@Accept			application/json
 //	@Produce		json
-//	@Param			id	query		int	true	"Book ID"
+//	@Param			id	path		int	true	"Book ID"
 //	@Success		200	{object}	domain.Book
 //	@Failure		400	{object}	fiber.errorMessage
-//	@Router			/api/book [get]
+//	@Router			/api/books/{id} [get]
 func (s *Server) GetBook(c *fiber.Ctx) error {
-	id := c.Query("id")
+	id := c.Params("id")
 	if id == "" {
 		logger.Logger().Warn("fiber: Book id is empty",
 			zapcore.Field{Key: "method", Type: zapcore.StringType, String: "GetBook"})
@@ -95,7 +95,7 @@ func (s *Server) GetBooks(c *fiber.Ctx) error {
 //	@Param			book	body		domain.Book	true	"Book"
 //	@Success		200		{object}	domain.Book
 //	@Failure		400		{object}	fiber.errorMessage
-//	@Router			/api/book [post]
+//	@Router			/api/books [post]
 func (s *Server) CreateBook(c *fiber.Ctx) error {
 	var book domain.Book
 	if err := c.BodyParser(&book); err != nil {
@@ -121,7 +121,7 @@ func (s *Server) CreateBook(c *fiber.Ctx) error {
 //	@Param			book	body		domain.Book	true	"Book"
 //	@Success		200		{object}	domain.Book
 //	@Failure		400		{object}	fiber.errorMessage
-//	@Router			/api/book [patch]
+//	@Router			/api/books [patch]
 func (s *Server) UpdateBook(c *fiber.Ctx) error {
 	var book domain.Book
 	if err := c.BodyParser(&book); err != nil {
@@ -147,7 +147,7 @@ func (s *Server) UpdateBook(c *fiber.Ctx) error {
 //	@Param			id	query		int	true	"Book ID"
 //	@Success		201	{object}	nil
 //	@Failure		400	{object}	fiber.errorMessage
-//	@Router			/api/book [delete]
+//	@Router			/api/books [delete]
 func (s *Server) DeleteBook(c *fiber.Ctx) error {
 	id := c.Query("id")
 	if id == "" {

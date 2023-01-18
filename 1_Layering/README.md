@@ -90,7 +90,11 @@ DeleteBook(ctx context.Context, id int) error
 go mod download
 ```
 
+Download [NATS](https://nats.io/download/)
+
 ### Run
+
+Start NATS server with default configuration and then run the service:
 
 ```bash
 make run
@@ -111,8 +115,7 @@ http://localhost:3000/docs/index.html
 ```
 
 OR  
-Swagger json file is available at:  
-internal/controller/server/fiber/docs/swagger.json
+[swagger.json](internal/controller/server/fiber/docs/swagger.json)
 
 ### Dev requirements
 
@@ -127,6 +130,8 @@ go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.1
 ```
 
 ### Run in dev mode
+
+Start NATS server with default configuration and then run the service with reflex:
 
 ```bash
 make watch

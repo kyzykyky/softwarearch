@@ -16,9 +16,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/book": {
+        "/api/books": {
             "get": {
-                "description": "Get Book by ID.",
+                "description": "Get Books with count and offset as optional params.\nCount is the number of books to return.\nOffset is the number of books to skip.",
                 "consumes": [
                     "application/json"
                 ],
@@ -28,21 +28,29 @@ const docTemplate = `{
                 "tags": [
                     "Book"
                 ],
-                "summary": "Get Book",
+                "summary": "Get Books",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Book ID",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
+                        "description": "Number of books to return",
+                        "name": "count",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.Book"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Book"
+                            }
                         }
                     },
                     "400": {
@@ -163,9 +171,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/books": {
+        "/api/books/{id}": {
             "get": {
-                "description": "Get Books with count and offset as optional params.\nCount is the number of books to return.\nOffset is the number of books to skip.",
+                "description": "Get Book by ID.",
                 "consumes": [
                     "application/json"
                 ],
@@ -175,29 +183,21 @@ const docTemplate = `{
                 "tags": [
                     "Book"
                 ],
-                "summary": "Get Books",
+                "summary": "Get Book",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Number of books to return",
-                        "name": "count",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
+                        "description": "Book ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/domain.Book"
-                            }
+                            "$ref": "#/definitions/domain.Book"
                         }
                     },
                     "400": {
