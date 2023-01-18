@@ -9,16 +9,24 @@ import (
 
 func main() {
 	productserver := productsvc.Server{
-		Host: "localhost",
-		Port: 8000,
+		ServiceId: "productsvc",
+		Host:      "localhost",
+		Port:      8000,
 	}
 	go productserver.Start()
 
-	stockserver := stocksvc.Server{
-		Host: "localhost",
-		Port: 8001,
+	stockserver1 := stocksvc.Server{
+		ServiceId: "stocksvc1",
+		Host:      "localhost",
+		Port:      8001,
 	}
-	go stockserver.Start()
+	go stockserver1.Start()
+	stockserver2 := stocksvc.Server{
+		ServiceId: "stocksvc2",
+		Host:      "localhost",
+		Port:      8002,
+	}
+	go stockserver2.Start()
 
 	// input for keeping the program running
 	var input string

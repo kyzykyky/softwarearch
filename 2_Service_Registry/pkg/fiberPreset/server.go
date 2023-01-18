@@ -8,7 +8,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/kyzykyky/softwarearch/svcreg/pkg/consul"
 	"github.com/kyzykyky/softwarearch/svcreg/pkg/logger"
 	"go.uber.org/zap"
 )
@@ -46,11 +45,5 @@ func (s *Server) New() error {
 	s.App.Get("/health", func(c *fiber.Ctx) error {
 		return c.Status(200).JSON(fiber.Map{"status": "ok"})
 	})
-
-	err := consul.RegisterService(s.Service, s.Title, []string{"lab", s.Service, s.Title}, s.Port)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
