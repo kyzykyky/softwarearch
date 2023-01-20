@@ -6,15 +6,19 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/kyzykyky/softwarearch/svcreg/pkg/consul"
 	fiberpreset "github.com/kyzykyky/softwarearch/svcreg/pkg/fiberPreset"
+	"github.com/kyzykyky/softwarearch/svcreg/productsvc/service"
 	"go.uber.org/zap"
 )
 
 type Server struct {
-	ServiceId string
-	Host      string
-	Port      int
-	app       *fiber.App
-	log       *zap.Logger
+	ServiceId        string
+	Host             string
+	Port             int
+	ConsulConnection consul.Consul
+	app              *fiber.App
+	log              *zap.Logger
+
+	Service service.Service
 }
 
 func (s Server) Start() error {
@@ -35,12 +39,15 @@ func (s Server) Start() error {
 	s.app = server.App
 	s.log = server.Log
 
-	s.SetRoutes()
-
-	err = consul.RegisterService(s.ServiceId, title, tags, s.Port)
+	s.Service.Start()
+	s.ConsulConnection, err = consul.RegisterService(s.ServiceId, title, s.Host, s.Port, tags)
 	if err != nil {
 		return err
 	}
+	s.Service.ConsulConnection = s.ConsulConnection
+
+	s.SetRoutes()
+
 	s.log.Info(fmt.Sprintf("Service %s starting", s.ServiceId))
-	return s.app.Listen(s.Host + ":" + fmt.Sprint(s.Port))
+	return s.app.Listen(fmt.Sprintf("%s:%d", s.Host, s.Port))
 }

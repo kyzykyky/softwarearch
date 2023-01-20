@@ -3,12 +3,14 @@ package fiberpreset
 import (
 	"fmt"
 
-	fiberLogger "github.com/gofiber/fiber/v2/middleware/logger"
-
+	fibertracing "github.com/aschenmaker/fiber-opentracing"
+	"github.com/aschenmaker/fiber-opentracing/fjaeger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	fiberLogger "github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/kyzykyky/softwarearch/svcreg/pkg/logger"
+	"github.com/opentracing/opentracing-go"
 	"go.uber.org/zap"
 )
 
@@ -40,6 +42,15 @@ func (s *Server) New() error {
 		AllowCredentials: true,
 	}))
 	s.App.Use(fiberLogger.New(logconf))
+
+	// Jaeger tracing
+	fjaeger.New(fjaeger.Config{})
+	s.App.Use(fibertracing.New(fibertracing.Config{
+		Tracer: opentracing.GlobalTracer(),
+		OperationName: func(ctx *fiber.Ctx) string {
+			return fmt.Sprintf("%s %s %s", s.Service, ctx.Method(), ctx.Path())
+		},
+	}))
 
 	// Consul health check
 	s.App.Get("/health", func(c *fiber.Ctx) error {

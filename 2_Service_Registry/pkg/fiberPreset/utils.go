@@ -13,7 +13,7 @@ import (
 
 func (s Server) RecoverStackTraceHandler(c *fiber.Ctx, err interface{}) {
 	logger.Logger().Error("fiber: server error",
-		zapcore.Field{Key: "error", Type: zapcore.ErrorType, Interface: err},
+		zapcore.Field{Key: "error", Type: zapcore.ReflectType, Interface: err},
 		zapcore.Field{Key: "path", Type: zapcore.StringType, String: c.Path()})
 }
 

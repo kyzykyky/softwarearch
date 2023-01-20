@@ -10,11 +10,12 @@ import (
 )
 
 type Server struct {
-	ServiceId string
-	Host      string
-	Port      int
-	app       *fiber.App
-	log       *zap.Logger
+	ServiceId        string
+	Host             string
+	Port             int
+	ConsulConnection consul.Consul
+	app              *fiber.App
+	log              *zap.Logger
 }
 
 func (s Server) Start() error {
@@ -37,10 +38,10 @@ func (s Server) Start() error {
 
 	s.SetRoutes()
 
-	err = consul.RegisterService(s.ServiceId, title, tags, s.Port)
+	s.ConsulConnection, err = consul.RegisterService(s.ServiceId, title, s.Host, s.Port, tags)
 	if err != nil {
 		return err
 	}
 	s.log.Info(fmt.Sprintf("Service %s starting", s.ServiceId))
-	return s.app.Listen(s.Host + ":" + fmt.Sprint(s.Port))
+	return s.app.Listen(fmt.Sprintf("%s:%d", s.Host, s.Port))
 }

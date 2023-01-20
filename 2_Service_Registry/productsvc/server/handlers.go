@@ -22,11 +22,16 @@ func (s Server) GetProduct(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "invalid id"})
 	}
 
-	product, ok := service.Products[intId]
-	if !ok {
-		s.log.Error("product not found",
-			zapcore.Field{Key: "id", Type: zapcore.Int64Type, Integer: int64(intId)})
-		return c.Status(404).JSON(fiber.Map{"error": "product not found"})
+	product, err := s.Service.GetProduct(intId)
+	if err != nil {
+		switch err {
+		case service.ErrProductNotFound:
+			return c.Status(404).JSON(fiber.Map{"error": service.ErrProductNotFound.Error()})
+		default:
+			s.log.Error("error getting product",
+				zapcore.Field{Key: "error", Type: zapcore.ErrorType, Interface: err})
+			return c.Status(500).JSON(fiber.Map{"error": "internal server error"})
+		}
 	}
 	return c.Status(200).JSON(product)
 }
